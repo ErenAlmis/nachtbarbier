@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nachtbarbier – Herrensalon in Duisburg</title>
+<meta name="description" content="Nachtbarbier: Herrensalon für Schnitt und Nassrasur in Duisburg-Ruhrort. Dienstag bis Samstag bis 23 Uhr, nur mit Termin. Fiktives Unternehmen, Portfolio-Projekt.">
+<meta name="theme-color" content="#e8dcc6">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preload" href="fonts/josefin-sans-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/pinyon-script-normal-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="fonts/fonts.css">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<a class="skip" href="#termin">Direkt zur Terminbuchung</a>
+
+<div class="frame">
+
+<header class="nav">
+  <a class="logo" href="#top" aria-label="Nachtbarbier, zum Seitenanfang">Nachtbarbier</a>
+  <nav class="nav-links" id="navLinks" aria-label="Hauptmenü">
+    <a href="#leistungen">Leistungen</a>
+    <a href="#lange-nacht">Die lange Nacht</a>
+    <a href="#barbiere">Barbiere</a>
+    <a href="#galerie">Galerie</a>
+    <a href="#besuch">Besuch</a>
+  </nav>
+  <a class="arrow-link nav-cta" href="#termin">Termin buchen <span aria-hidden="true">↗</span></a>
+  <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="navLinks">Menü</button>
+</header>
+
+<main id="top">
+
+<!-- hero-track: wird höher, sobald die Rasiermesser-Bildfolge existiert (sequence.js); der Hero bleibt dann stehen -->
+<div class="hero-track" data-seq="razor">
+<section class="hero" aria-labelledby="heroTitle">
+  <canvas class="seq-canvas" hidden aria-hidden="true"></canvas>
+  <div class="hero-media" aria-hidden="true">
+    <div class="hero-photo" data-photo="assets/hero.jpg"></div>
+    <!-- Video wird nur geladen, wenn assets/hero.mp4 existiert (script.js) -->
+    <video class="hero-video" muted loop playsinline preload="none" poster="assets/hero.jpg" hidden></video>
+  </div>
+  <button class="video-toggle" id="videoToggle" type="button" hidden aria-pressed="false">Video anhalten</button>
+  <svg class="hero-rings" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <defs>
+      <linearGradient id="ringGold" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#d9b45a" stop-opacity=".15"/>
+        <stop offset=".45" stop-color="#f6e2a8" stop-opacity=".7"/>
+        <stop offset=".6" stop-color="#d9b45a" stop-opacity=".45"/>
+        <stop offset="1" stop-color="#9e6f27" stop-opacity=".12"/>
+      </linearGradient>
+    </defs>
+    <circle cx="520" cy="470" r="430"/>
+    <circle cx="1080" cy="380" r="520"/>
+  </svg>
+  <div class="hero-grid">
+    <h1 id="heroTitle" class="hero-title"><span>Nacht</span><span>barbier</span></h1>
+    <div class="hero-side">
+      <p class="hero-lede">Ein Herrensalon für Männer, die sich Zeit nehmen. Schnitt und Rasur mit der Ruhe einer späten Stunde, mitten im Hafen von Ruhrort.</p>
+      <a class="arrow-link" href="#leistungen">Leistungen ansehen <span aria-hidden="true">↗</span></a>
+    </div>
+    <p class="hero-note">Dienstag bis Samstag bis 23 Uhr.<br>Termine nur nach Buchung.</p>
+  </div>
+</section>
+</div>
+
+<section class="intro" aria-labelledby="introTitle">
+  <div class="intro-text">
+    <h2 id="introTitle" class="h2">Eine Rasur, für die man sich den Abend freihält.</h2>
+    <p>Bei uns arbeitet jeder Barbier an genau einem Gast. Kein Wartebereich, keine Eile, kein Lärm. Heiße Tücher, ein Messer, das jeden Morgen geschliffen wird, und so viel Zeit, wie Ihr Gesicht braucht.</p>
+    <a class="arrow-link" href="#lange-nacht">Die lange Nacht entdecken <span aria-hidden="true">↗</span></a>
+  </div>
+  <figure class="photo intro-photo" data-photo="assets/intro.jpg"><figcaption>Foto folgt: Heißes Tuch</figcaption></figure>
+</section>
+
+<section class="night" id="lange-nacht" aria-labelledby="nightTitle">
+  <div class="night-aside">
+    <h2 id="nightTitle" class="h2">Die lange Nacht</h2>
+    <p class="night-price">150 Minuten im Separee, 290 €</p>
+    <p class="night-intro">Unser Ritual für besondere Abende. Fünf Kapitel, ein Gast, ein Barbier.</p>
+    <a class="arrow-link" href="#termin" data-service="lange-nacht">Die lange Nacht buchen <span aria-hidden="true">↗</span></a>
+  </div>
+  <ol class="chapters">
+    <li class="chapter">
+      <span class="chapter-no" aria-hidden="true">1</span>
+      <h3>Ankommen</h3>
+      <p>Wir nehmen Ihnen den Mantel ab und führen Sie ins Separee. Der Vorhang fällt, das Licht wird warm, das Telefon darf schweigen.</p>
+    </li>
+    <li class="chapter">
+      <span class="chapter-no" aria-hidden="true">2</span>
+      <h3>Heiße Tücher</h3>
+      <p>Drei Tücher mit Eukalyptus öffnen die Haut. Währenddessen besprechen wir in Ruhe Schnitt und Bart.</p>
+      <figure class="photo chapter-photo" data-photo="assets/gallery-1.jpg"></figure>
+    </li>
+    <li class="chapter">
+      <span class="chapter-no" aria-hidden="true">3</span>
+      <h3>Das Messer</h3>
+      <p>Schnitt mit Schere und Messer, danach die klassische Nassrasur in zwei Durchgängen. Kalte Kompresse, Balsam, fertig.</p>
+    </li>
+    <li class="chapter">
+      <span class="chapter-no" aria-hidden="true">4</span>
+      <h3>Gesicht und Kopf</h3>
+      <p>Eine Maske aus Tonerde und eine Kopfmassage, die länger dauert, als Sie erwarten.</p>
+      <figure class="photo chapter-photo" data-photo="assets/gallery-5.jpg"></figure>
+    </li>
+    <li class="chapter">
+      <span class="chapter-no" aria-hidden="true">5</span>
+      <h3>Ein Glas zum Schluss</h3>
+      <p>Ein Single Malt aus unserer Auswahl, und erst dann der Spiegel. Gehen Sie, wann Sie möchten.</p>
+      <figure class="photo chapter-photo" data-photo="assets/gallery-3.jpg"></figure>
+    </li>
+  </ol>
+</section>
+
+<!-- Whisky-Szene: nur sichtbar, wenn assets/frames/whisky/ existiert -->
+<section class="scene" data-seq="whisky" hidden aria-labelledby="sceneTitle">
+  <div class="scene-sticky">
+    <canvas class="seq-canvas" hidden aria-hidden="true"></canvas>
+    <div class="scene-text">
+      <p class="scene-script" aria-hidden="true">Zum Schluss</p>
+      <h2 id="sceneTitle" class="h2">Ein Glas Single Malt</h2>
+      <p>Aus unserer Auswahl von zwölf Brennereien. Bei der langen Nacht inklusive, bei jedem anderen Termin auf Wunsch.</p>
+    </div>
+  </div>
+</section>
+
+<section class="services" id="leistungen" aria-labelledby="servicesTitle">
+  <div class="services-head">
+    <h2 id="servicesTitle" class="h2">Leistungen</h2>
+    <p>Alle Preise inklusive Getränk. Termine dauern so lange wie angegeben, nie kürzer.</p>
+  </div>
+  <div class="price-list" id="priceList"></div>
+</section>
+
+<section class="team" id="barbiere" aria-labelledby="teamTitle">
+  <h2 id="teamTitle" class="h2">Die Barbiere</h2>
+  <div class="team-grid" id="teamGrid"></div>
+</section>
+
+<section class="gallery" id="galerie" aria-labelledby="galleryTitle">
+  <h2 id="galleryTitle" class="h2">Galerie</h2>
+  <div class="gallery-grid">
+    <figure class="photo g-tall" data-photo="assets/gallery-1.jpg"></figure>
+    <figure class="photo" data-photo="assets/gallery-2.jpg"></figure>
+    <figure class="photo" data-photo="assets/gallery-3.jpg"></figure>
+    <figure class="photo" data-photo="assets/gallery-4.jpg"></figure>
+    <figure class="photo" data-photo="assets/gallery-5.jpg"></figure>
+  </div>
+</section>
+
+<!-- Terminbuchung: eine Einladungskarte auf hellem Papier -->
+<section class="booking" id="termin" aria-labelledby="bookTitle">
+  <div class="booking-head">
+    <p class="booking-script" aria-hidden="true">Ihre Einladung</p>
+    <h2 id="bookTitle" class="h2">Termin buchen</h2>
+    <p>Wählen Sie Leistung, Barbier und Uhrzeit. Wir bestätigen jeden Termin persönlich per Telefon.</p>
+  </div>
+
+  <form class="book" id="bookForm" novalidate>
+    <div class="book-steps">
+      <fieldset class="field">
+        <legend>Leistung</legend>
+        <div class="choice-list" id="serviceChoices"></div>
+      </fieldset>
+      <fieldset class="field">
+        <legend>Barbier</legend>
+        <div class="chips" id="barberChoices"></div>
+      </fieldset>
+      <fieldset class="field">
+        <legend>Tag</legend>
+        <div class="chips chips-scroll" id="dayChoices"></div>
+      </fieldset>
+      <fieldset class="field">
+        <legend>Uhrzeit</legend>
+        <div class="chips chips-grid" id="timeChoices">
+          <p class="hint">Wählen Sie zuerst Leistung, Barbier und Tag. Dann erscheinen hier die freien Zeiten.</p>
+        </div>
+      </fieldset>
+      <fieldset class="field contact">
+        <legend>Ihre Angaben</legend>
+        <label class="line"><span>Name</span><input id="bkName" autocomplete="name" maxlength="60" required></label>
+        <label class="line"><span>Telefon</span><input id="bkPhone" type="tel" inputmode="tel" autocomplete="tel" maxlength="24" required></label>
+        <label class="line line-wide"><span>Wünsche <em>(optional)</em></span><input id="bkNote" maxlength="140" placeholder="Zum Beispiel: Separee"></label>
+      </fieldset>
+    </div>
+
+    <aside class="summary" aria-live="polite">
+      <p class="summary-script" aria-hidden="true">Nachtbarbier</p>
+      <p class="sum-row" id="sumService" data-empty="Leistung"></p>
+      <p class="sum-row" id="sumBarber" data-empty="Barbier"></p>
+      <p class="sum-row" id="sumDay" data-empty="Tag"></p>
+      <p class="sum-row sum-time" id="sumTime" data-empty="Uhrzeit"></p>
+      <p class="sum-price" id="sumPrice"></p>
+      <p class="form-error" id="bookError" role="alert"></p>
+      <button class="btn" type="submit">Termin buchen</button>
+      <p class="demo-note">Demo: Termine werden nur in diesem Browser gespeichert.</p>
+    </aside>
+  </form>
+
+  <div class="done" id="bookDone" hidden tabindex="-1">
+    <p class="booking-script" aria-hidden="true">Bis bald</p>
+    <p class="done-kicker">Ihr Termin ist gebucht</p>
+    <p class="done-when" id="doneWhen"></p>
+    <p class="done-meta" id="doneMeta"></p>
+    <button class="arrow-link" type="button" id="bookAgain">Weiteren Termin buchen</button>
+  </div>
+</section>
+
+<section class="visit" id="besuch" aria-labelledby="visitTitle">
+  <svg class="visit-rings" viewBox="0 0 800 800" aria-hidden="true"><circle cx="400" cy="400" r="380"/></svg>
+  <p class="visit-script" aria-hidden="true">Am Hafen</p>
+  <h2 id="visitTitle" class="visit-title">Am Nachtufer 7</h2>
+  <p class="visit-city">47119 Duisburg-Ruhrort</p>
+  <dl class="hours">
+    <div><dt>Dienstag bis Freitag</dt><dd>15:00 – 23:00</dd></div>
+    <div><dt>Samstag</dt><dd>12:00 – 23:00</dd></div>
+    <div><dt>Sonntag und Montag</dt><dd>geschlossen</dd></div>
+  </dl>
+</section>
+
+</main>
+
+<footer class="footer">
+  <span class="logo">Nachtbarbier</span>
+  <p>Fiktives Unternehmen. Portfolio-Projekt von <a href="https://github.com/ErenAlmis" target="_blank" rel="noopener">Eren Mert Almış</a>.</p>
+</footer>
+
+</div>
+
+<script src="data.js"></script>
+<script src="script.js"></script>
+<script src="booking.js"></script>
+<script src="motion.js"></script>
+<script src="sequence.js"></script>
+</body>
+</html>
