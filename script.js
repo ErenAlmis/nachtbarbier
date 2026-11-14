@@ -19,9 +19,7 @@
     <article class="barber">
       <figure class="photo barber-photo" data-photo="${esc(b.photo)}">
         <span class="monogram" aria-hidden="true">${esc(initials(b.name))}</span>
-        <span class="barber-light" aria-hidden="true"></span>
-        <span class="barber-frame" aria-hidden="true"></span>
-        <a class="barber-book" href="#termin" data-barber="${esc(b.id)}">Bei ${esc(b.name.split(" ")[0])} buchen <span aria-hidden="true">↗</span></a>
+        <span class="barber-glow" aria-hidden="true"></span>
       </figure>
       <h3 class="barber-name">${esc(b.name)}</h3>
       <p class="barber-role">${esc(b.role)}</p>
@@ -72,19 +70,6 @@
     chapters.forEach((c) => io.observe(c));
     chapters[0].classList.add("is-active");
   }
-
-  // Barbier-Porträts: Lampenlicht folgt dem Zeiger; "Bei … buchen" wählt den Barbier im Formular aus
-  document.querySelectorAll(".barber-photo").forEach((fig) => {
-    fig.addEventListener("pointermove", (e) => {
-      const r = fig.getBoundingClientRect();
-      fig.style.setProperty("--mx", `${(((e.clientX - r.left) / r.width) * 100).toFixed(1)}%`);
-      fig.style.setProperty("--my", `${(((e.clientY - r.top) / r.height) * 100).toFixed(1)}%`);
-    });
-  });
-  document.querySelectorAll("[data-barber]").forEach((a) => a.addEventListener("click", () => {
-    const input = document.querySelector(`input[name="barber"][value="${a.dataset.barber}"]`);
-    if (input && !input.checked) { input.checked = true; input.dispatchEvent(new Event("change", { bubbles: true })); }
-  }));
 
   // "Die lange Nacht buchen" wählt die Leistung im Formular schon aus
   document.querySelectorAll("[data-service]").forEach((a) => a.addEventListener("click", () => {
