@@ -2,18 +2,18 @@
 window.NB = {
   services: [
     // img: Foto, das beim Überfahren der Zeile neben dem Zeiger erscheint
-    { id: "schnitt", name: "Haarschnitt", min: 60, price: 95, img: "assets/gallery-2.jpg",
+    { id: "schnitt", name: "Haarschnitt", min: 60, price: 45, img: "assets/gallery-2.jpg",
       desc: "Beratung, Waschen, Schnitt mit Schere und Maschine, Styling." },
-    { id: "rasur", name: "Nassrasur", min: 45, price: 85, img: "assets/gallery-1.jpg",
+    { id: "rasur", name: "Nassrasur", min: 45, price: 40, img: "assets/gallery-1.jpg",
       desc: "Heiße Tücher, Rasur mit dem Messer, kalte Kompresse und Balsam." },
-    { id: "bart", name: "Bart", min: 45, price: 75, img: "assets/gallery-4.jpg",
+    { id: "bart", name: "Bart", min: 45, price: 30, img: "assets/gallery-4.jpg",
       desc: "Kontur, Form und Pflege mit Öl. Für Bärte, die gewollt aussehen." },
-    { id: "schnitt-rasur", name: "Haarschnitt und Rasur", min: 105, price: 165, img: "assets/intro.jpg",
+    { id: "schnitt-rasur", name: "Haarschnitt und Rasur", min: 105, price: 75, img: "assets/intro.jpg",
       desc: "Beides in einem Termin, mit einer Pause für Kaffee oder Whisky." },
-    { id: "lange-nacht", name: "Die lange Nacht", min: 150, price: 290, img: "assets/gallery-5.jpg",
+    { id: "lange-nacht", name: "Die lange Nacht", min: 150, price: 129, img: "assets/gallery-5.jpg",
       desc: "Schnitt, Rasur, Gesichtsbehandlung und Kopfmassage im Separee, dazu ein Glas Single Malt." },
   ],
-  membership: "Mitgliedschaft: zwei Termine im Monat zu Ihrer festen Uhrzeit, Separee nach Wunsch. 390 € im Monat.",
+  membership: "Mitgliedschaft: zwei Termine im Monat zu Ihrer festen Uhrzeit, Separee nach Wunsch. 99 € im Monat.",
   barbers: [
     { id: "emre", name: "Emre Aydın", role: "Meisterbarbier und Inhaber",
       bio: "Seit zwanzig Jahren am Messer. Emre rasiert so, wie man es in Istanbul gelernt hat: langsam, heiß und gründlich.",
