@@ -28,7 +28,7 @@
 }
 
 *, *::before, *::after { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
+html { scroll-behavior: auto; } /* Ankerscrollen übernimmt script.js (easeInOut) */
 body {
   margin: 0; background: var(--bone); color: var(--ivory);
   font: 400 17px/1.65 var(--f-body); -webkit-font-smoothing: antialiased;
@@ -695,3 +695,5 @@ section { scroll-margin-top: calc(var(--frame) + 8px); }
   .motion .gallery-grid .photo.reveal.is-in:hover::before { transform: scale(1.06); }
   .gallery-grid:has(.photo:hover) .photo:not(:hover) { filter: brightness(.62) saturate(.85); }
 }
+/* Ziel-Abschnitte bekommen beim Anspringen Fokus, aber keinen sichtbaren Rahmen */
+section[tabindex="-1"]:focus, main[tabindex="-1"]:focus { outline: none; }

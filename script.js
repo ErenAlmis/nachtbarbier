@@ -92,3 +92,54 @@
     if (input && !input.checked) { input.checked = true; input.dispatchEvent(new Event("change", { bubbles: true })); }
   }));
 })();
+
+// ---------------------------------------------------------------------------
+// Sanftes Scrollen zu Ankern: beschleunigt am Anfang, bremst am Ende (easeInOutCubic).
+// Wie auf der Kor-Döner-Seite. Scrollt der Nutzer selbst dazwischen, wird abgebrochen.
+// Bei "Bewegung reduzieren" springt die Seite sofort.
+// ---------------------------------------------------------------------------
+(function easedAnchors() {
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)");
+  const easeInOutCubic = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+  let raf = 0;
+  const stop = () => { cancelAnimationFrame(raf); raf = 0; };
+  ["wheel", "touchstart", "keydown"].forEach((ev) =>
+    window.addEventListener(ev, () => raf && stop(), { passive: true }));
+
+  function scrollToY(targetY, done) {
+    stop();
+    const startY = window.scrollY;
+    const dist = targetY - startY;
+    if (Math.abs(dist) < 2) { done(); return; }
+    // Längere Wege dauern etwas länger, aber nie träge
+    const duration = Math.min(1800, Math.max(700, Math.abs(dist) * 0.4));
+    const t0 = performance.now();
+    const tick = (now) => {
+      const t = Math.min(1, (now - t0) / duration);
+      window.scrollTo(0, startY + dist * easeInOutCubic(t));
+      if (t < 1) raf = requestAnimationFrame(tick);
+      else { raf = 0; done(); }
+    };
+    raf = requestAnimationFrame(tick);
+  }
+
+  document.addEventListener("click", (e) => {
+    const a = e.target.closest('a[href^="#"]');
+    if (!a || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey) return;
+    const id = decodeURIComponent(a.getAttribute("href").slice(1));
+    const target = id ? document.getElementById(id) : document.body;
+    if (!target) return;
+    e.preventDefault();
+    const margin = parseFloat(getComputedStyle(target).scrollMarginTop) || 0;
+    const maxY = document.documentElement.scrollHeight - window.innerHeight;
+    const y = Math.min(maxY, Math.max(0, target.getBoundingClientRect().top + window.scrollY - margin));
+    const finish = () => {
+      history.pushState(null, "", id ? "#" + id : location.pathname);
+      // Fokus für Tastatur und Screenreader auf das Ziel setzen
+      if (!target.hasAttribute("tabindex")) target.setAttribute("tabindex", "-1");
+      target.focus({ preventScroll: true });
+    };
+    if (reduce.matches) { window.scrollTo(0, y); finish(); }
+    else scrollToY(y, finish);
+  });
+})();
