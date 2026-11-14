@@ -9,6 +9,36 @@
 
   const $ = (id) => document.getElementById(id);
   const form = $("bookForm");
+
+  // Perdenvorhang: Bordeaux-Samt schließt sich, dahinter wechselt die Ansicht, dann öffnet er sich.
+  // Bei "Bewegung reduzieren" wechselt die Ansicht sofort.
+  const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)");
+  new Image().src = matchMedia("(max-aspect-ratio: 4/5)").matches ? "assets/curtain-m.jpg" : "assets/curtain.jpg";
+  function curtain(label, swap) {
+    if (reduceMotion.matches) { swap(); return; }
+    let el = document.getElementById("curtain");
+    if (!el) {
+      el = document.createElement("div");
+      el.id = "curtain"; el.className = "curtain"; el.setAttribute("aria-hidden", "true");
+      el.innerHTML = '<div class="curtain-panel curtain-left"><span class="curtain-img"></span></div>' +
+        '<div class="curtain-panel curtain-right"><span class="curtain-img"></span></div><p class="curtain-mark"></p>';
+      document.body.append(el);
+    }
+    el.querySelector(".curtain-mark").textContent = label;
+    el.classList.add("is-on");
+    void el.offsetWidth;                       // Startzustand rendern, damit die Bewegung sichtbar ist
+    el.classList.add("is-closed");
+    setTimeout(() => {
+      swap();
+      const sec = document.getElementById("termin");
+      const m = parseFloat(getComputedStyle(sec).scrollMarginTop) || 0;
+      window.scrollTo(0, sec.getBoundingClientRect().top + window.scrollY - m);
+      setTimeout(() => {
+        el.classList.remove("is-closed");      // Vorhang öffnet sich
+        setTimeout(() => el.classList.remove("is-on"), 1700);
+      }, 650);
+    }, 1000);
+  }
   const err = $("bookError");
   const esc = (s) => String(s).replace(/[&<>"']/g, (c) =>
     ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
@@ -163,7 +193,9 @@
     meta.textContent = `${s.name} bei ${barberName(barber)}, reserviert auf den Namen ${name}. Ihre Buchungsnummer: `;
     const code = document.createElement("span"); code.className = "done-code"; code.textContent = id;
     meta.append(code);
-    form.hidden = true; $("bookDone").hidden = false; $("bookDone").focus();
+    curtain("Ihr Termin", () => {
+      form.hidden = true; $("bookDone").hidden = false; $("bookDone").focus({ preventScroll: true });
+    });
   });
 
   $("bookAgain").addEventListener("click", () => {
@@ -172,8 +204,10 @@
     $("timeChoices").innerHTML = '<p class="hint">Wählen Sie zuerst Leistung, Barbier und Tag. Dann erscheinen hier die freien Zeiten.</p>';
     err.textContent = "";
     renderSummary();
-    $("bookDone").hidden = true; form.hidden = false;
-    const firstOpt = form.querySelector('[name="service"]');
-    if (firstOpt) firstOpt.focus();
+    curtain("Neuer Termin", () => {
+      $("bookDone").hidden = true; form.hidden = false;
+      const firstOpt = form.querySelector('[name="service"]');
+      if (firstOpt) firstOpt.focus({ preventScroll: true });
+    });
   });
 })();

@@ -669,3 +669,45 @@ section { scroll-margin-top: calc(var(--frame) + 8px); }
 }
 /* Ziel-Abschnitte bekommen beim Anspringen Fokus, aber keinen sichtbaren Rahmen */
 section[tabindex="-1"]:focus, main[tabindex="-1"]:focus { outline: none; }
+
+/* ---------------------------------------------------------------------------
+   Vorhang nach der Buchung: ein Foto (assets/curtain.jpg) zweier geschlossener
+   Samtbahnen, in der Mitte geteilt. Jede Hälfte zeigt ihren Teil des Fotos.
+   Schließt schnell, öffnet langsam und rafft sich dabei zur Seite.
+   --------------------------------------------------------------------------- */
+.curtain { position: fixed; inset: 0; z-index: 300; pointer-events: none; visibility: hidden; overflow: hidden; }
+.curtain.is-on { visibility: visible; pointer-events: auto; }
+.curtain-panel {
+  position: absolute; top: 0; bottom: 0; width: 50%; overflow: hidden;
+  background: #3d0b13;
+  box-shadow: 0 0 60px rgba(0,0,0,.7);
+  transition: transform 1.6s cubic-bezier(.65,0,.25,1);
+}
+.curtain-left  { left: 0;  transform-origin: left center;  transform: translateX(-104%) scaleX(.55); }
+.curtain-right { right: 0; transform-origin: right center; transform: translateX(104%)  scaleX(.55); }
+/* Das Foto ist so breit wie der Bildschirm; links sieht man seine linke, rechts seine rechte Hälfte */
+.curtain-img {
+  position: absolute; top: 0; bottom: 0; width: 200%;
+  background: #3d0b13 url("assets/curtain.jpg") 49.9% center / cover no-repeat;
+}
+.curtain-left .curtain-img  { left: 0; }
+.curtain-right .curtain-img { right: 0; }
+/* Licht von oben, Schatten zum Boden */
+.curtain-panel::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(180deg, rgba(0,0,0,.55) 0%, transparent 18%, transparent 72%, rgba(0,0,0,.6) 100%);
+}
+.curtain-mark {
+  position: absolute; left: 50%; top: 50%; margin: 0; transform: translate(-50%, -40%);
+  font-family: var(--f-script); font-size: clamp(54px, 9vw, 110px); line-height: 1.2; white-space: nowrap;
+  background: var(--gold-foil); -webkit-background-clip: text; background-clip: text; color: transparent;
+  filter: drop-shadow(0 4px 18px rgba(0,0,0,.85));
+  opacity: 0; transition: opacity .4s ease, transform .9s ease;
+}
+/* Schließen: schneller als Öffnen */
+.curtain.is-closed .curtain-panel { transform: none; transition-duration: .95s; }
+.curtain.is-closed .curtain-mark { opacity: 1; transform: translate(-50%, -50%); transition-delay: .6s, .6s; }
+/* Hochformat (Telefon): eigenes, hohes Vorhangfoto, damit die Falten nicht zu groß werden */
+@media (max-aspect-ratio: 4/5) {
+  .curtain-img { background-image: url("assets/curtain-m.jpg"); background-position: 49.8% center; }
+}

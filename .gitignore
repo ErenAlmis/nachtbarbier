@@ -1,3 +1,7 @@
 .claude/
 # Rohvideos: die Seite nutzt nur die daraus erzeugten Einzelbilder
 assets/*.mp4
+assets/curtain-original.webp
+assets/curtain-m-original.webp
+# Vorschaubilder für Chat/Notizen, nicht Teil der Seite
+docs/
