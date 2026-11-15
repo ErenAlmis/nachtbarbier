@@ -47,32 +47,40 @@
     // Ein- und Ausblenden der Adressleiste; ein neues Canvas mitten im Scrollen ruckelt.
     let lastW = 0, lastH = 0;
     function size() {
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
       const w = canvas.clientWidth, h = canvas.clientHeight;
+      // Hochformat: 1,5-fache Auflösung reicht für das dunkle, weiche Bild und halbiert die Pixelarbeit
+      const dpr = Math.min(window.devicePixelRatio || 1, h > w * 1.1 ? 1.5 : 2);
       if (w === lastW && Math.abs(h - lastH) < 2) return;
       lastW = w; lastH = h;
       canvas.width = Math.round(w * dpr); canvas.height = Math.round(h * dpr);
+      fades = null;
       current = -1; render();
     }
+    let fades = null;   // Verläufe einmal pro Größe bauen, nicht pro Bild
     function draw(img) {
       const cw = canvas.width, ch = canvas.height;
-      const iw = img.naturalWidth, ih = img.naturalHeight;
+      const iw = img.naturalWidth || img.width, ih = img.naturalHeight || img.height;
       const fx = meta.focusX ?? 0.5;
       let s, x, y;
       if (ch > cw * 1.1) {
         // Hochformat (Telefon): Motiv ganz zeigen, im oberen Teil; Rest bleibt schwarz wie der Bildhintergrund
-        s = (cw * 1.45) / iw;
+        // pScale: Bildbreite relativ zur Canvasbreite (Telefon-Bilder sind schon auf den sichtbaren Teil zugeschnitten)
+        s = (cw * (meta.pScale ?? 1.45)) / iw;
         x = (cw - iw * s) * fx; y = ch * 0.06;
-        ctx.fillStyle = meta.bg || "#000"; ctx.fillRect(0, 0, cw, ch);
-        ctx.drawImage(img, x, y, iw * s, ih * s);
+        const h = ih * s, fade = h * 0.22, bg = meta.bg || "#000";
+        // Nur die Flächen ober- und unterhalb des Bildes füllen, nicht das ganze Canvas
+        ctx.fillStyle = bg; ctx.fillRect(0, 0, cw, Math.ceil(y)); ctx.fillRect(0, Math.floor(y + h), cw, ch);
+        ctx.drawImage(img, x, y, iw * s, h);
         // Bildkanten weich in den Hintergrund auslaufen lassen (oben und unten)
-        const h = ih * s, fade = h * 0.22;
-        const top = ctx.createLinearGradient(0, y, 0, y + fade);
-        top.addColorStop(0, meta.bg || "#000"); top.addColorStop(1, "rgba(0,0,0,0)");
-        ctx.fillStyle = top; ctx.fillRect(0, y - 1, cw, fade + 1);
-        const bot = ctx.createLinearGradient(0, y + h - fade, 0, y + h);
-        bot.addColorStop(0, "rgba(0,0,0,0)"); bot.addColorStop(1, meta.bg || "#000");
-        ctx.fillStyle = bot; ctx.fillRect(0, y + h - fade, cw, fade + 1);
+        if (!fades) {
+          const top = ctx.createLinearGradient(0, y, 0, y + fade);
+          top.addColorStop(0, bg); top.addColorStop(1, "rgba(0,0,0,0)");
+          const bot = ctx.createLinearGradient(0, y + h - fade, 0, y + h);
+          bot.addColorStop(0, "rgba(0,0,0,0)"); bot.addColorStop(1, bg);
+          fades = { top, bot };
+        }
+        ctx.fillStyle = fades.top; ctx.fillRect(0, y - 1, cw, fade + 1);
+        ctx.fillStyle = fades.bot; ctx.fillRect(0, y + h - fade, cw, fade + 1);
         return;
       } else {
         // Querformat: wie object-fit: cover, Motiv nach focusX ausgerichtet (Motiv rechts, Text links)
@@ -110,7 +118,11 @@
       img.decoding = "async";
       img.src = src(i);
       frames[i] = img;
-      const done = () => {
+      const done = async () => {
+        // Als ImageBitmap behalten: bleibt dekodiert, der Browser muss beim Scrollen nichts nachladen
+        if (window.createImageBitmap) {
+          try { frames[i] = await createImageBitmap(img); } catch (e) { /* Bild bleibt als <img> */ }
+        }
         ready[i] = true;
         if (current < 0 || Math.abs(i - Math.round(progress() * (n - 1))) < 3) { current = -1; render(); }
       };
