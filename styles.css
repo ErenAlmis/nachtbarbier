@@ -711,3 +711,19 @@ section[tabindex="-1"]:focus, main[tabindex="-1"]:focus { outline: none; }
 @media (max-aspect-ratio: 4/5) {
   .curtain-img { background-image: url("assets/curtain-m.jpg"); background-position: 49.8% center; }
 }
+
+/* ---------------------------------------------------------------------------
+   Telefone und Tablets: leichtere Enthüllung. clip-path wird bei jedem Bild
+   neu gemalt; Deckkraft und Verschieben laufen auf der Grafikkarte.
+   --------------------------------------------------------------------------- */
+@media (hover: none), (max-width: 760px) {
+  .motion .photo.reveal {
+    clip-path: none; opacity: 0; transform: translateY(28px);
+    transition: opacity .9s ease, transform 1.1s cubic-bezier(.2,.7,.2,1);
+  }
+  .motion .photo.reveal.is-in { clip-path: none; opacity: 1; transform: none; }
+  .motion .photo.reveal::before { transform: scale(1.06); transition: transform 1.6s cubic-bezier(.2,.7,.2,1); }
+  .motion .photo.reveal.is-in::before { transform: scale(1); }
+  /* Große weiche Schatten sind beim Scrollen teuer */
+  .booking .summary { box-shadow: 0 16px 34px -18px rgba(0,0,0,.7); }
+}
