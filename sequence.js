@@ -25,7 +25,9 @@
     const canvas = track.querySelector(".seq-canvas");
     const ctx = canvas.getContext("2d", { alpha: false });
     const n = meta.count;
-    const src = (i) => `${base}${meta.prefix || "frame-"}${String(i + 1).padStart(3, "0")}.${meta.ext || "webp"}`;
+    // "v" im Manifest: neue Bilder mit gleichem Namen umgehen den Browser-Cache
+    const ver = meta.v ? `?v=${meta.v}` : "";
+    const src = (i) => `${base}${meta.prefix || "frame-"}${String(i + 1).padStart(3, "0")}.${meta.ext || "webp"}${ver}`;
     const frames = new Array(n);
     const ready = new Array(n).fill(false);    // erst nach decode() zeichnen: kein Dekodieren mitten im Scrollen
     let current = -1;
