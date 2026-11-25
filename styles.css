@@ -727,3 +727,8 @@ section[tabindex="-1"]:focus, main[tabindex="-1"]:focus { outline: none; }
   /* Große weiche Schatten sind beim Scrollen teuer */
   .booking .summary { box-shadow: 0 16px 34px -18px rgba(0,0,0,.7); }
 }
+
+/* Feldprüfung: Hinweis unter dem Feld, Linie in Rosé bei Fehlern */
+.field-msg { min-height: 0; font-size: 13px; line-height: 1.35; color: #f2a7a0; }
+.field-msg:empty { display: none; }
+.line input[aria-invalid="true"] { border-bottom-color: #f2a7a0; box-shadow: 0 1px 0 0 #f2a7a0; }

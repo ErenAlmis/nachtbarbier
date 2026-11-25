@@ -10,6 +10,63 @@
   const $ = (id) => document.getElementById(id);
   const form = $("bookForm");
 
+  // ---------------------------------------------------------------------------
+  // Eingaben prüfen: Name und Telefonnummer.
+  // Jede Prüfung gibt { value } (bereinigt) oder { msg } (Fehlertext für den Kunden) zurück.
+  // ---------------------------------------------------------------------------
+  function checkName(v) {
+    const name = v.trim().replace(/\s+/g, " ");
+    if (!name) return { msg: "Tragen Sie Ihren Namen ein. Wir reservieren den Termin auf diesen Namen." };
+    if (/\d/.test(name)) return { msg: "Der Name darf keine Ziffern enthalten." };
+    if (!/^\p{L}[\p{L}\p{M} .'’-]*$/u.test(name)) return { msg: "Bitte nur Buchstaben, Leerzeichen, Bindestrich und Apostroph verwenden." };
+    if ((name.match(/\p{L}/gu) || []).length < 2) return { msg: "Der Name ist zu kurz." };
+    return { value: name };
+  }
+
+  // Deutsche Nummern mit Vorwahl (0203 …, 0176 …), auch als +49 / 0049; andere Länder mit + und Ländervorwahl.
+  // Ergebnis ist die Nummer im internationalen Format, z. B. +4917612345678.
+  function checkPhone(v) {
+    const raw = v.trim();
+    if (!raw) return { msg: "Tragen Sie Ihre Telefonnummer ein, damit wir den Termin bestätigen können." };
+    if (/[^\d\s+()\/.-]/.test(raw)) return { msg: "Die Telefonnummer darf nur Ziffern, Leerzeichen und + - / ( ) enthalten." };
+    if ((raw.match(/\+/g) || []).length > 1 || raw.indexOf("+") > 0) return { msg: "Das Pluszeichen ist nur am Anfang erlaubt, z. B. +49 176 12345678." };
+    const d = raw.replace(/\D/g, "");
+    if (/(\d)\1{6,}/.test(d)) return { msg: "Bitte geben Sie eine echte Telefonnummer ein." };
+
+    let intl = null;
+    if (raw.startsWith("+")) intl = d;
+    else if (d.startsWith("00")) intl = d.slice(2);
+
+    if (intl !== null && !intl.startsWith("49")) {
+      if (intl.length < 8 || intl.length > 15) return { msg: "Diese internationale Telefonnummer hat eine ungültige Länge." };
+      return { value: "+" + intl };
+    }
+    const national = intl !== null ? "0" + intl.slice(2) : d;
+    if (!national.startsWith("0") || national.startsWith("00")) {
+      return { msg: "Bitte mit Vorwahl angeben, z. B. 0203 123456 oder 0176 12345678." };
+    }
+    if (/^01[5-7]/.test(national)) {
+      if (national.length < 10 || national.length > 12) return { msg: "Eine Handynummer hat 10 bis 12 Ziffern, z. B. 0176 12345678." };
+    } else if (national.length < 7 || national.length > 13) {
+      return { msg: "Diese Telefonnummer ist zu kurz oder zu lang. Bitte mit Vorwahl angeben." };
+    }
+    return { value: "+49" + national.slice(1) };
+  }
+
+  // Fehler direkt am Feld zeigen: beim Verlassen prüfen, beim Tippen den Fehler löschen, sobald er behoben ist
+  function showFieldResult(el, res) {
+    const msgEl = $(el.id + "Msg");
+    el.setAttribute("aria-invalid", res.msg ? "true" : "false");
+    if (msgEl) msgEl.textContent = res.msg || "";
+  }
+  [["bkName", checkName], ["bkPhone", checkPhone]].forEach(([id, check]) => {
+    const el = $(id);
+    el.addEventListener("blur", () => { if (el.value.trim()) showFieldResult(el, check(el.value)); });
+    el.addEventListener("input", () => {
+      if (el.getAttribute("aria-invalid") === "true") showFieldResult(el, check(el.value));
+    });
+  });
+
   // Perdenvorhang: Bordeaux-Samt schließt sich, dahinter wechselt die Ansicht, dann öffnet er sich.
   // Bei "Bewegung reduzieren" wechselt die Ansicht sofort.
   const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)");
@@ -161,15 +218,16 @@
   form.addEventListener("submit", (e) => {
     e.preventDefault();
     const nameEl = $("bkName"), phoneEl = $("bkPhone");
-    const name = nameEl.value.trim(), phone = phoneEl.value.trim(), note = $("bkNote").value.trim();
+    const nameRes = checkName(nameEl.value), phoneRes = checkPhone(phoneEl.value);
+    const name = nameRes.value || "", phone = phoneRes.value || "", note = $("bkNote").value.trim();
     const first = (sel) => form.querySelector(sel);
     let msg = "", focus = null;
     if (!state.service) { msg = "Wählen Sie eine Leistung."; focus = first('[name="service"]'); }
     else if (!state.barber) { msg = "Wählen Sie einen Barbier."; focus = first('[name="barber"]'); }
     else if (!state.date) { msg = "Wählen Sie einen Tag."; focus = first('[name="day"]:not(:disabled)'); }
     else if (!state.time) { msg = "Wählen Sie eine freie Uhrzeit."; focus = first('[name="time"]:not(:disabled)'); }
-    else if (name.length < 2) { msg = "Tragen Sie Ihren Namen ein. Wir reservieren den Termin auf diesen Namen."; focus = nameEl; }
-    else if ((phone.match(/\d/g) || []).length < 6) { msg = "Tragen Sie Ihre Telefonnummer ein, damit wir den Termin bestätigen können."; focus = phoneEl; }
+    else if (nameRes.msg) { msg = nameRes.msg; focus = nameEl; showFieldResult(nameEl, nameRes); }
+    else if (phoneRes.msg) { msg = phoneRes.msg; focus = phoneEl; showFieldResult(phoneEl, phoneRes); }
     if (msg) { err.textContent = msg; if (focus) focus.focus(); return; }
 
     const s = service(), start = toMin(state.time);
@@ -204,6 +262,7 @@
     $("timeChoices").innerHTML = '<p class="hint">Wählen Sie zuerst Leistung, Barbier und Tag. Dann erscheinen hier die freien Zeiten.</p>';
     err.textContent = "";
     renderSummary();
+    ["bkName", "bkPhone"].forEach((id) => showFieldResult($(id), {}));
     curtain("Neuer Termin", () => {
       $("bookDone").hidden = true; form.hidden = false;
       const firstOpt = form.querySelector('[name="service"]');
